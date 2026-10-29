@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0a0907">
+<title>Locket Gold – Trang chuyển hướng tải file</title>
+<meta name="description" content="Trang chuyển hướng tải file Locket Gold (APK cho Android). File được lưu trữ trên MediaFire, do bên thứ ba phát hành.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
+<script>
+/* ==========================================================
+   CẤU HÌNH – CHỈ CẦN SỬA Ở ĐÂY, toàn trang tự cập nhật
+   ========================================================== */
+window.SITE = {
+  name:      "Locket Gold",
+  version:   "1.244.0",
+  build:     "b617",
+  platform:  "Android",
+  format:    "APK",
+  host:      "MediaFire",
+  publisher: "ElaMods",
+  fileName:  "Locket v1.244.0 b617 (Premium By ElaMods).apk",
+  url:       "https://www.mediafire.com/file/9kp4yz5jvql0ofp/Locket+v1.244.0+b617+(Premium+By+ElaMods).apk/file",
+  wait:      5   /* số giây chờ trước khi hiện link */
+};
+</script>
+<style>
+:root{
+  --bg:#0a0907;
+  --text:#f6f2e9;
+  --muted:rgba(246,242,233,.62);
+  --faint:rgba(246,242,233,.38);
+  --gold-0:#fff4d2;
+  --gold-1:#ffe7a8;
+  --gold-2:#f2c25b;
+  --gold-3:#c8892a;
+  --gold-4:#7a4d12;
+  --hair:rgba(255,236,190,.12);
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Inter","Segoe UI",Roboto,system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.22,.8,.24,1);
+  --spring:cubic-bezier(.2,.9,.3,1.25);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:96px}
+body{
+  margin:0;min-height:100vh;color:var(--text);background:var(--bg);
+  font-family:var(--sans);font-size:16px;line-height:1.55;font-feature-settings:"cv11","ss01";
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden;
+}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold-1);outline-offset:3px;border-radius:14px}
+::selection{background:rgba(242,194,91,.35)}
+
+/* ============ Nền: orb vàng + hạt mịn ============ */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:
+    radial-gradient(1100px 640px at 50% -10%,rgba(242,194,91,.10),transparent 70%),
+    linear-gradient(180deg,#110e0a 0%,var(--bg) 60%);
+}
+.orb{position:absolute;border-radius:50%;filter:blur(72px);opacity:.6;
+  translate:calc(var(--px,0)*28px) calc(var(--py,0)*28px);transition:translate .9s var(--ease)}
+.orb i{display:block;width:100%;height:100%;border-radius:50%;animation:drift 22s ease-in-out infinite alternate}
+.o1{width:min(78vw,760px);height:min(78vw,760px);left:calc(50% - min(39vw,380px));top:-300px;
+  background:radial-gradient(circle at 40% 40%,rgba(255,214,120,.55),rgba(200,137,42,.18) 55%,transparent 72%)}
+.o2{width:min(60vw,560px);height:min(60vw,560px);right:-16vw;top:38%;
+  background:radial-gradient(circle,rgba(217,150,40,.36),transparent 68%)}
+.o2 i{animation-duration:28s;animation-direction:alternate-reverse}
+.o3{width:min(54vw,500px);height:min(54vw,500px);left:-14vw;bottom:-12%;
+  background:radial-gradient(circle,rgba(255,226,150,.22),transparent 66%)}
+.o3 i{animation-duration:32s}
+@keyframes drift{from{transform:translate3d(-3%,-2%,0) scale(1)}to{transform:translate3d(4%,5%,0) scale(1.1)}}
+.grain{position:absolute;inset:0;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.cursor-light{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,20%),rgba(255,226,150,.07),transparent 62%)}
+
+/* ============ Liquid glass ============ */
+.glass{
+  position:relative;isolation:isolate;border-radius:28px;
+  background:
+    linear-gradient(155deg,rgba(255,246,222,.13) 0%,rgba(255,232,176,.045) 42%,rgba(255,222,150,.075) 100%);
+  -webkit-backdrop-filter:blur(30px) saturate(190%) brightness(1.04);
+  backdrop-filter:blur(30px) saturate(190%) brightness(1.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.30),
+    inset 0 -1px 0 rgba(255,236,190,.06),
+    inset 0 0 28px rgba(255,226,150,.035),
+    0 1px 2px rgba(0,0,0,.30),
+    0 30px 70px -34px rgba(0,0,0,.85);
+}
+/* viền sáng dạng gradient */
+.glass::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;z-index:2;
+  background:linear-gradient(140deg,rgba(255,244,210,.60),rgba(255,236,190,.07) 28%,rgba(255,226,150,0) 58%,rgba(255,214,120,.38));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+}
+/* điểm sáng chạy theo con trỏ */
+.glass::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:1;opacity:0;
+  background:radial-gradient(300px circle at var(--gx,50%) var(--gy,0%),rgba(255,240,200,.20),transparent 62%);
+  transition:opacity .45s ease;
+}
+.glass:hover::before{opacity:1}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .glass{background:linear-gradient(155deg,#2a2218,#17120c)}
+}
+
+/* ============ Thanh điều hướng ============ */
+.nav{
+  position:fixed;z-index:50;top:max(14px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);
+  width:min(680px,calc(100% - 28px));height:56px;padding:0 8px 0 18px;border-radius:999px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  transition:background .4s ease,box-shadow .4s ease;
+}
+.nav.scrolled{background:linear-gradient(155deg,rgba(40,31,18,.62),rgba(22,17,10,.5))}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;letter-spacing:-.01em;text-decoration:none}
+.brand .dot{width:22px;height:22px;border-radius:50%;
+  background:radial-gradient(circle at 32% 28%,#fff6d8,var(--gold-2) 48%,var(--gold-4));
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.6),0 0 16px rgba(242,194,91,.55)}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-links a.l{padding:8px 12px;border-radius:999px;font-size:14px;color:var(--muted);text-decoration:none;transition:color .25s,background .25s}
+.nav-links a.l:hover{color:var(--text);background:rgba(255,236,190,.07)}
+.nav-cta{margin-left:6px;padding:9px 16px;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;color:#2a1a04;
+  background:linear-gradient(180deg,var(--gold-1),var(--gold-2));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 6px 18px -6px rgba(242,194,91,.7);transition:transform .25s var(--ease),filter .25s}
+.nav-cta:hover{transform:translateY(-1px);filter:brightness(1.06)}
+
+/* ============ Hero ============ */
+main,footer{position:relative;z-index:1}
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:clamp(96px,13vh,124px) 22px 20px}
+.hero>*{animation:rise 1s var(--ease) both}
+.hero>:nth-child(2){animation-delay:.07s}
+.hero>:nth-child(3){animation-delay:.14s}
+.hero>:nth-child(4){animation-delay:.24s}
+@keyframes rise{from{opacity:0;transform:translateY(22px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+
+.eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 16px 8px 12px;border-radius:999px;font-size:13.5px;color:var(--muted);letter-spacing:-.005em}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--gold-1);box-shadow:0 0 0 3px rgba(255,231,168,.14),0 0 14px 2px rgba(255,231,168,.8);animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(255,231,168,0),0 0 18px 4px rgba(255,231,168,.5)}}
+
+h1{margin:20px 0 0;font-weight:700;font-size:clamp(54px,12.5vw,124px);line-height:1;letter-spacing:-.05em;
+  background:linear-gradient(100deg,#fff3cc 0%,#f7d27e 22%,#e1a53b 42%,#fff0c2 58%,#f2c25b 78%,#fff3cc 100%);
+  background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:rise 1s var(--ease) both,shimmer 9s linear 1s infinite;
+  filter:drop-shadow(0 10px 46px rgba(242,194,91,.26))}
+@keyframes shimmer{to{background-position:220% center}}
+.lead{margin:16px 0 0;max-width:30em;color:var(--muted);font-size:clamp(17px,2.3vw,21px);line-height:1.5;letter-spacing:-.012em}
+.lead b{color:var(--text);font-weight:500}
+
+/* Thẻ tải xuống */
+.deck{position:relative;width:100%;max-width:440px;margin-top:32px}
+.sphere{position:absolute;border-radius:50%;z-index:0;pointer-events:none;
+  background:radial-gradient(circle at 32% 26%,#fff8e0 0%,var(--gold-1) 18%,var(--gold-2) 50%,var(--gold-4) 100%);
+  box-shadow:inset -8px -12px 24px rgba(90,52,8,.55),inset 6px 8px 14px rgba(255,255,255,.45),0 24px 50px -16px rgba(200,137,42,.6);
+  animation:bob 7s ease-in-out infinite alternate}
+.s1{width:92px;height:92px;right:-40px;top:-46px}
+.s2{width:58px;height:58px;left:-30px;bottom:44px;animation-duration:9s;animation-direction:alternate-reverse}
+.s3{width:30px;height:30px;right:18px;bottom:-22px;animation-duration:6s}
+@keyframes bob{from{transform:translateY(-10px) rotate(-4deg)}to{transform:translateY(12px) rotate(6deg)}}
+
+.card{z-index:1;padding:22px;border-radius:34px;text-align:left;
+  transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transition:transform .5s var(--ease)}
+.card.tracking{transition:transform .08s linear}
+.card-head{display:flex;align-items:center;gap:14px;padding:4px 4px 16px;border-bottom:1px solid var(--hair)}
+.appmark{width:54px;height:54px;flex:none;border-radius:16px;display:grid;place-items:center;
+  background:linear-gradient(160deg,#fff0bd,var(--gold-2) 52%,var(--gold-3));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 -6px 12px rgba(122,77,18,.35),0 10px 24px -8px rgba(242,194,91,.7)}
+.appmark svg{width:28px;height:28px}
+.meta{min-width:0;flex:1}
+.meta strong{display:block;font-size:17px;font-weight:600;letter-spacing:-.015em}
+.meta span{display:block;color:var(--muted);font-size:13.5px;margin-top:1px}
+.badge{padding:5px 11px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.02em;color:var(--gold-1);
+  background:rgba(242,194,91,.12);box-shadow:inset 0 0 0 1px rgba(255,231,168,.22)}
+
+.hint{margin:14px 0 0;text-align:center;color:var(--faint);font-size:13.5px}
+
+/* Nút tải: 1 nút duy nhất, 3 trạng thái idle → wait → ready */
+.btn{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;margin-top:18px;border:0;cursor:pointer;text-decoration:none;font-weight:600;font-size:17px;letter-spacing:-.01em;line-height:1;
+  padding:19px 30px;border-radius:999px;color:#2a1a04;
+  background:linear-gradient(180deg,#ffedb8 0%,var(--gold-2) 58%,#dca03a 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.65),inset 0 -2px 6px rgba(150,92,16,.35),0 0 0 1px rgba(255,231,168,.3),0 16px 36px -14px rgba(242,194,91,.8);
+  transition:transform .35s var(--ease),box-shadow .4s ease,filter .3s ease,background .4s ease,color .3s;-webkit-tap-highlight-color:transparent}
+.btn::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:38%;transform:skewX(-20deg);pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.62),transparent);transition:left .75s ease}
+.btn:hover{filter:brightness(1.05)}
+.btn:hover::after{left:140%}
+.btn:active{transform:scale(.98)}
+.btn .t{font-variant-numeric:tabular-nums}
+.btn .ic{display:none;width:20px;height:20px;flex:none}
+.btn[data-state="wait"]{cursor:progress;color:var(--text);filter:none;transform:none;
+  background:rgba(255,236,190,.07);box-shadow:inset 0 0 0 1px var(--hair)}
+.btn[data-state="wait"]::after{display:none}
+.btn[data-state="ready"] .ic{display:block}
+.btn[data-state="ready"]{animation:pop .6s var(--spring) both}
+@keyframes pop{from{transform:scale(.96)}to{transform:none}}
+.ripple{position:absolute;border-radius:50%;pointer-events:none;background:rgba(255,255,255,.5);transform:scale(0);animation:ripple .7s ease-out forwards}
+@keyframes ripple{to{transform:scale(1);opacity:0}}
+
+/* ============ Các mục bên dưới ============ */
+.section{max-width:880px;margin:0 auto;padding:40px 22px 0}
+.kicker{display:block;margin-bottom:10px;color:var(--gold-2);font-size:14px;font-weight:600;letter-spacing:-.005em}
+.section h2{margin:0 0 20px;font-weight:700;font-size:clamp(30px,5.4vw,46px);line-height:1.08;letter-spacing:-.035em}
+.section h2 span{color:var(--muted)}
+
+.bento{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.tile{padding:20px;display:flex;flex-direction:column;justify-content:space-between;gap:18px;transition:transform .5s var(--ease)}
+.tile:hover{transform:translateY(-4px)}
+.tile.wide{grid-column:1/-1;min-height:0;flex-direction:row;align-items:center;justify-content:space-between;gap:18px}
+.ico{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;color:var(--gold-1);flex:none;
+  background:linear-gradient(160deg,rgba(255,231,168,.18),rgba(255,231,168,.05));box-shadow:inset 0 1px 0 rgba(255,255,255,.2),inset 0 0 0 1px rgba(255,231,168,.16)}
+.ico svg{width:20px;height:20px}
+.tile small{display:block;color:var(--muted);font-size:13.5px;margin-bottom:4px}
+.tile strong{display:block;font-size:clamp(19px,3vw,23px);font-weight:600;letter-spacing:-.025em;line-height:1.2}
+.tile .mono{font-family:var(--mono);font-size:clamp(13px,2.4vw,15.5px);font-weight:500;letter-spacing:0;overflow-wrap:anywhere;color:var(--gold-0)}
+.tile.wide .txt{min-width:0;flex:1}
+.tile.wide .head{display:flex;align-items:center;gap:16px;min-width:0;flex:1}
+.copy{flex:none;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;border:0;cursor:pointer;font-size:14px;font-weight:500;
+  background:rgba(255,236,190,.07);box-shadow:inset 0 0 0 1px var(--hair);transition:background .25s,transform .25s var(--ease)}
+.copy:hover{background:rgba(255,236,190,.13)}
+.copy:active{transform:scale(.96)}
+.copy svg{width:16px;height:16px}
+
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;counter-reset:s}
+.how .glass{padding:22px 22px 24px;transition:transform .5s var(--ease)}
+.how .glass:hover{transform:translateY(-4px)}
+.how .n{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;margin-bottom:14px;font-weight:600;font-size:15px;color:#2a1a04;
+  background:linear-gradient(180deg,var(--gold-1),var(--gold-2));box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 8px 20px -8px rgba(242,194,91,.8)}
+.how h3{margin:0 0 8px;font-size:18px;font-weight:600;letter-spacing:-.02em}
+.how p{margin:0;color:var(--muted);font-size:15px;line-height:1.55}
+
+.notice{margin-top:0;padding:24px;background:linear-gradient(155deg,rgba(255,214,120,.16),rgba(242,194,91,.05) 55%,rgba(255,214,120,.08))}
+.notice .top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.notice h3{margin:0;font-size:19px;font-weight:600;letter-spacing:-.02em;color:var(--gold-1)}
+.notice p{margin:0;color:rgba(246,242,233,.78);font-size:15.5px;line-height:1.6}
+.notice p+p{margin-top:10px}
+
+.faq{display:grid;gap:10px}
+.faq details{border-radius:22px;overflow:hidden}
+.faq summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:20px 22px;font-size:16.5px;font-weight:500;letter-spacing:-.015em;position:relative;z-index:3}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";width:22px;height:22px;flex:none;border-radius:50%;
+  background:
+    linear-gradient(var(--gold-1),var(--gold-1)) center/10px 1.6px no-repeat,
+    linear-gradient(var(--gold-1),var(--gold-1)) center/1.6px 10px no-repeat,
+    rgba(242,194,91,.12);
+  box-shadow:inset 0 0 0 1px rgba(255,231,168,.22);transition:transform .45s var(--ease)}
+.faq details[open] summary::after{transform:rotate(135deg)}
+.faq .ans{padding:0 22px 22px;color:var(--muted);font-size:15.5px;line-height:1.6;position:relative;z-index:3}
+.faq details[open] .ans{animation:fade .5s ease both}
+
+footer{margin-top:44px;padding:24px 22px calc(32px + env(safe-area-inset-bottom));text-align:center;color:var(--faint);font-size:13px;border-top:1px solid var(--hair)}
+footer p{margin:0 auto;max-width:40em}
+footer p+p{margin-top:6px}
+
+/* Toast */
+.toast{position:fixed;z-index:80;left:50%;bottom:max(28px,env(safe-area-inset-bottom));padding:12px 20px;border-radius:999px;font-size:14px;font-weight:500;
+  transform:translate(-50%,24px) scale(.96);opacity:0;pointer-events:none;transition:transform .5s var(--spring),opacity .35s ease}
+.toast.show{transform:translate(-50%,0) scale(1);opacity:1}
+
+/* Hiện dần khi cuộn */
+.js .reveal{opacity:0;transform:translateY(26px);filter:blur(4px);transition:opacity .9s ease,transform .9s var(--ease),filter .9s ease;transition-delay:calc(var(--i,0)*90ms)}
+.js .reveal.in{opacity:1;transform:none;filter:none}
+
+@media (max-width:760px){
+  .nav-links a.l{display:none}
+  .how{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .bento{grid-template-columns:1fr}
+  .tile{min-height:0}
+  .tile.wide{flex-direction:column;align-items:stretch}
+  .copy{justify-content:center}
+  .card{padding:18px;border-radius:30px}
+  .s1{right:-14px;width:70px;height:70px;top:-38px}
+  .s2{left:-12px;width:44px;height:44px}
+  .section{padding-top:32px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important;scroll-behavior:auto!important}
+  h1{background-position:0 center}
+}
+
+/* ============ Nút đếm ngược: nạp đầy ============ */
+.btn>*:not(.fill):not(.ripple){position:relative;z-index:1}
+.btn>.ripple{position:absolute;z-index:0}
+.btn .fill{position:absolute;z-index:0;left:0;top:0;bottom:0;width:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(200,137,42,.10),rgba(242,194,91,.38))}
+.btn .fill::after{content:"";position:absolute;right:0;top:0;bottom:0;width:2px;background:var(--gold-1);box-shadow:0 0 16px 4px rgba(255,226,150,.65)}
+.btn[data-state="ready"] .fill,.btn[data-state="idle"] .fill{opacity:0}
+.btn[data-state="wait"] .fill{transition:none}
+.btn .rg{display:none;width:22px;height:22px;flex:none;transform:rotate(-90deg)}
+.btn .rg circle{fill:none;stroke-width:2.6}
+.rg-t{stroke:rgba(255,236,190,.2)}
+.rg-p{stroke:var(--gold-1);stroke-linecap:round;stroke-dasharray:56.55;stroke-dashoffset:56.55}
+.btn[data-state="wait"] .rg{display:block}
+.cd{display:inline-block;min-width:1.5em;text-align:left;color:var(--gold-1);font-weight:700;font-variant-numeric:tabular-nums}
+.cd.roll{animation:roll .38s var(--ease)}
+@keyframes roll{from{opacity:0;transform:translateY(55%) scale(.88);filter:blur(2px)}to{opacity:1;transform:none;filter:none}}
+.btn[data-state="ready"]::after{animation:sweep 1.1s ease .35s 1 both}
+@keyframes sweep{from{left:-60%}to{left:140%}}
+
+/* ============ Ẩn mảng xanh mờ khi chạm/bấm ============ */
+*{-webkit-tap-highlight-color:transparent}
+a,button,summary,.btn,.copy{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;outline:none}
+a:focus:not(:focus-visible),button:focus:not(:focus-visible),summary:focus:not(:focus-visible){outline:none}
+#fname{-webkit-user-select:text;user-select:text}
+
+/* ============ Làm đẹp chữ ============ */
+body{font-optical-sizing:auto;text-rendering:optimizeLegibility}
+h1,h2,h3,.lead{text-wrap:balance}
+p,.ans,.hint{text-wrap:pretty}
+h1{letter-spacing:-.055em;padding-bottom:.06em}
+.lead{color:rgba(246,242,233,.7)}
+.kicker{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.16em}
+.kicker::before{content:"";width:22px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-2))}
+.section h2 span{background:linear-gradient(180deg,rgba(246,242,233,.72),rgba(246,242,233,.42));-webkit-background-clip:text;background-clip:text;color:transparent}
+.tile small{font-size:11.5px;font-weight:500;text-transform:uppercase;letter-spacing:.09em;color:var(--faint)}
+.tile strong{background:linear-gradient(180deg,#fff,#efe3c4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tile .mono{background:none;color:var(--gold-0)}
+.meta strong{letter-spacing:-.02em}
+.meta span{font-size:13px;letter-spacing:.01em}
+.badge{letter-spacing:.06em;text-transform:uppercase;font-size:11px}
+.how h3,.notice h3{letter-spacing:-.025em}
+.how p,.notice p,.faq .ans{letter-spacing:-.003em;line-height:1.65}
+.faq summary{transition:color .3s}
+.faq summary:hover{color:var(--gold-0)}
+.tile .ico,.how .n{transition:box-shadow .4s ease,transform .4s var(--ease)}
+.tile:hover .ico{box-shadow:inset 0 1px 0 rgba(255,255,255,.25),inset 0 0 0 1px rgba(255,231,168,.3),0 0 22px rgba(242,194,91,.35);transform:scale(1.06)}
+.how .glass:hover .n{transform:scale(1.08)}
+footer p{letter-spacing:.005em;line-height:1.6}
+
+/* ============ Sửa lỗi & tinh chỉnh ============ */
+html{overflow-x:clip}
+body{min-height:100vh;min-height:100dvh}
+.hero>h1{padding-top:.06em;animation:rise 1s var(--ease) .07s backwards,shimmer 9s linear 1s infinite}
+@keyframes fade{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+/* Nút đếm ngược: cao cố định, không xuống dòng, không giật */
+.btn{min-height:60px;padding:0 28px;white-space:nowrap}
+.btn .t{display:inline-flex;align-items:center;gap:.4em;line-height:1.2}
+.cd{min-width:0;text-align:center}
+.btn[data-state="wait"]{background:rgba(255,236,190,.08);box-shadow:inset 0 0 0 1px rgba(255,231,168,.2),inset 0 1px 0 rgba(255,255,255,.08)}
+.btn[data-state="wait"] .fill{background:linear-gradient(90deg,rgba(200,137,42,.16),rgba(242,194,91,.42))}
+.hint{min-height:1.55em}
+
+/* Hover nhấc thẻ hoạt động lại sau khi đã hiện */
+.js .reveal.done{transition:transform .45s var(--ease),opacity .3s ease,filter .3s ease;transition-delay:0s}
+.js .tile.reveal.done:hover,.js .how .glass.reveal.done:hover{transform:translateY(-4px)}
+
+/* Viền focus cho bàn phím */
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--gold-1);outline-offset:3px}
+.btn:focus-visible{outline-offset:4px}
+
+/* Không cắt dấu tiếng Việt ở chữ gradient; bỏ chữ in hoa */
+.tile strong{padding:.14em 0;margin:-.14em 0}
+.kicker{text-transform:none;letter-spacing:-.005em;font-size:14px}
+.tile small{text-transform:none;letter-spacing:0;font-size:13px;color:var(--muted)}
+.badge{text-transform:none;letter-spacing:.01em;font-size:12px}
+
+/* Nhịp trang thoáng hơn */
+.section{padding-top:clamp(36px,8vw,72px)}
+footer{margin-top:clamp(44px,8vw,80px)}
+@media (max-width:380px){
+  .btn{font-size:16px;padding:0 18px}
+  .nav{padding-left:14px}
+  .nav-cta{padding:8px 13px}
+}
+
+/* ============ Đồng hồ mở khoá + thanh 5 nấc ============ */
+.btn .dial{display:none;position:relative;width:38px;height:38px;flex:none}
+.btn[data-state="wait"] .dial{display:block}
+.dial svg{width:100%;height:100%;transform:rotate(-90deg);filter:drop-shadow(0 0 6px rgba(255,226,150,.45))}
+.dial circle{fill:none;stroke-width:2.6}
+.dial .rg-t{stroke:rgba(255,236,190,.16)}
+.dial .rg-p{stroke:var(--gold-1);stroke-linecap:round;stroke-dasharray:94.25;stroke-dashoffset:94.25}
+.btn .dial b{position:absolute;inset:0;display:grid;place-items:center;font-size:17px;font-weight:700;color:var(--gold-0);font-variant-numeric:tabular-nums}
+.dial b.roll{animation:roll .38s var(--ease)}
+.pips{display:none;align-items:flex-end;gap:4px;margin-left:6px}
+.btn[data-state="wait"] .pips{display:inline-flex}
+.pips i{width:5px;height:20px;border-radius:3px;
+  background:linear-gradient(to top,var(--gold-1) calc(var(--p,0)*100%),rgba(255,236,190,.15) calc(var(--p,0)*100%));
+  box-shadow:0 0 calc(var(--p,0)*9px) rgba(255,226,150,.55)}
+@media (max-width:360px){.pips{display:none!important}}
+
+/* ============ Bảng thông số phiên bản ============ */
+.card-head{border-bottom:0;padding:2px 4px 0}
+.meta .sub{display:block;margin-top:2px;color:var(--muted);font-size:13.5px;letter-spacing:0}
+.meta .sub span{display:inline;margin:0;font-size:inherit}
+.spec{display:grid;grid-template-columns:1.4fr 1fr 1fr;margin-top:16px;border-radius:20px;overflow:hidden;
+  background:linear-gradient(180deg,rgba(10,8,5,.42),rgba(10,8,5,.26));
+  box-shadow:inset 0 0 0 1px var(--hair),inset 0 2px 8px rgba(0,0,0,.28)}
+.spec>div{padding:13px 16px;min-width:0}
+.spec>div+div{border-left:1px solid var(--hair)}
+.spec small{display:block;font-size:12.5px;color:var(--faint);letter-spacing:0}
+.spec b{display:block;margin-top:3px;font-size:18px;font-weight:650;letter-spacing:-.025em;line-height:1.25;white-space:nowrap;font-variant-numeric:tabular-nums}
+.spec .v{font-size:21px;line-height:1.2;background:linear-gradient(180deg,var(--gold-0),var(--gold-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+@media (max-width:420px){
+  .spec{grid-template-columns:1fr 1fr}
+  .spec .c1{grid-column:1/-1;border-bottom:1px solid var(--hair)}
+  .spec .c2{border-left:0}
+}
+</style>
+</head>
+<body>
+
+<div class="bg" aria-hidden="true">
+  <div class="orb o1"><i></i></div>
+  <div class="orb o2"><i></i></div>
+  <div class="orb o3"><i></i></div>
+  <div class="grain"></div>
+</div>
+<div class="cursor-light" aria-hidden="true"></div>
+
+<header class="nav glass" id="nav">
+  <a class="brand" href="#top" aria-label="Locket Gold – về đầu trang"><span class="dot" aria-hidden="true"></span><span data-k="name">Locket Gold</span></a>
+  <nav class="nav-links" aria-label="Điều hướng">
+    <a class="l" href="#thong-tin">Thông tin</a>
+    <a class="l" href="#cai-dat">Cài đặt</a>
+    <a class="l" href="#hoi-dap">Hỏi đáp</a>
+    <a class="nav-cta" href="#get">Tải về</a>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <span class="eyebrow glass"><i></i>Bản Android &middot; Trang chuyển hướng</span>
+    <h1 data-k="name">Locket Gold</h1>
+    <p class="lead">File APK cho Android, lưu trữ trên <b>MediaFire</b>. Bấm nhận link, chờ vài giây và link sẽ mở trong tab mới.</p>
+
+    <div class="deck" id="get">
+      <span class="sphere s1" aria-hidden="true"></span>
+      <span class="sphere s2" aria-hidden="true"></span>
+      <span class="sphere s3" aria-hidden="true"></span>
+
+      <div class="glass card" id="card">
+        <div class="card-head">
+          <div class="appmark" aria-hidden="true">
+            <svg viewBox="0 0 28 28" fill="none" stroke="#3a2406" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2.5v3"/><circle cx="14" cy="16" r="9"/><circle cx="14" cy="16" r="3.4" fill="#3a2406" stroke="none"/></svg>
+          </div>
+          <div class="meta">
+            <strong data-k="name">Locket Gold</strong>
+            <span class="sub"><span data-k="format">APK</span> &middot; lưu trữ trên <span data-k="host">MediaFire</span></span>
+          </div>
+        </div>
+
+        <div class="spec">
+          <div class="c1"><small>Phiên bản</small><b class="v" data-k="version">1.244.0</b></div>
+          <div class="c2"><small>Bản dựng</small><b data-k="build">b617</b></div>
+          <div class="c3"><small>Nền tảng</small><b data-k="platform">Android</b></div>
+        </div>
+
+        <a class="btn" id="cta" href="#get" role="button" data-state="idle">
+          <i class="fill" id="ctaBar" aria-hidden="true"></i>
+          <span class="dial" aria-hidden="true"><svg viewBox="0 0 36 36"><circle class="rg-t" cx="18" cy="18" r="15"/><circle class="rg-p" id="ctaRing" cx="18" cy="18" r="15"/></svg><b id="ctaNum">5</b></span>
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg>
+          <span class="t" id="ctaLabel">Nhận link tải</span>
+          <span class="pips" id="ctaPips" aria-hidden="true"></span>
+        </a>
+        <p class="hint" id="hint" aria-live="polite">Link tải sẽ sẵn sàng sau <span data-k="wait">5</span> giây.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Thông tin file -->
+  <section class="section" id="thong-tin">
+    <span class="kicker reveal">Chi tiết</span>
+    <h2 class="reveal" style="--i:1">Thông tin file. <span>Rõ ràng trước khi tải.</span></h2>
+    <div class="bento">
+      <div class="glass tile wide reveal" style="--i:1">
+        <div class="head">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg></div>
+          <div class="txt">
+            <small>Tên file</small>
+            <strong class="mono" id="fname" data-k="fileName">Locket v1.244.0 b617 (Premium By ElaMods).apk</strong>
+          </div>
+        </div>
+        <button class="copy" id="copyBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="3"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
+          Sao chép tên
+        </button>
+      </div>
+
+      <div class="glass tile reveal" style="--i:2">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V4h9l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="8.5" r="1.2"/></svg></div>
+        <div><small>Phiên bản</small><strong data-k="versionFull">1.244.0 (b617)</strong></div>
+      </div>
+
+      <div class="glass tile reveal" style="--i:3">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></div>
+        <div><small>Định dạng</small><strong><span data-k="format">APK</span> &middot; <span data-k="platform">Android</span></strong></div>
+      </div>
+
+      <div class="glass tile reveal" style="--i:4">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 10a4 4 0 0 1-.5 8z"/></svg></div>
+        <div><small>Nơi lưu trữ</small><strong>MediaFire <span style="color:var(--muted);font-weight:500">(bên thứ ba)</span></strong></div>
+      </div>
+
+      <div class="glass tile reveal" style="--i:5">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></svg></div>
+        <div><small>Phát hành bởi</small><strong>ElaMods <span style="color:var(--muted);font-weight:500">(không chính thức)</span></strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hướng dẫn -->
+  <section class="section" id="cai-dat">
+    <span class="kicker reveal">Hướng dẫn</span>
+    <h2 class="reveal" style="--i:1">Cài đặt trong <span>ba bước.</span></h2>
+    <div class="how">
+      <div class="glass reveal" style="--i:1">
+        <div class="n">1</div>
+        <h3>Tải file APK</h3>
+        <p>Bấm nút tải ở đầu trang. Trang <span data-k="host">MediaFire</span> sẽ mở ra, hãy chọn tải về máy.</p>
+      </div>
+      <div class="glass reveal" style="--i:2">
+        <div class="n">2</div>
+        <h3>Cho phép cài đặt</h3>
+        <p>Nếu máy hỏi, bật quyền cài ứng dụng từ nguồn không xác định cho trình duyệt hoặc trình quản lý file đang dùng.</p>
+      </div>
+      <div class="glass reveal" style="--i:3">
+        <div class="n">3</div>
+        <h3>Mở file và cài</h3>
+        <p>Mở file APK vừa tải, bấm Cài đặt rồi làm theo hướng dẫn trên màn hình.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lưu ý -->
+  <section class="section">
+    <div class="glass notice reveal">
+      <div class="top">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2.6 19.5a1 1 0 0 0 .9 1.5h17a1 1 0 0 0 .9-1.5z"/><path d="M12 10v4.5"/><path d="M12 17.6v.1"/></svg></div>
+        <h3>Lưu ý trước khi tải</h3>
+      </div>
+      <p>Đây là trang chuyển hướng. Trang không lưu trữ file và không phải trang chính thức của Locket. File do bên thứ ba (<span data-k="publisher">ElaMods</span>) phát hành, là bản chỉnh sửa không chính thức.</p>
+      <p>Hãy tự kiểm tra nguồn file và chỉ cài đặt khi bạn tin tưởng. Bạn tự chịu trách nhiệm khi tải và sử dụng.</p>
+    </div>
+  </section>
+
+  <!-- Hỏi đáp -->
+  <section class="section" id="hoi-dap">
+    <span class="kicker reveal">Hỏi đáp</span>
+    <h2 class="reveal" style="--i:1">Câu hỏi <span>thường gặp.</span></h2>
+    <div class="faq">
+      <details class="glass reveal" style="--i:1">
+        <summary>File này có phải bản chính thức của Locket không?</summary>
+        <div class="ans">Không. Đây là bản chỉnh sửa không chính thức do <span data-k="publisher">ElaMods</span> phát hành. Trang này chỉ chuyển hướng bạn đến file trên <span data-k="host">MediaFire</span> và không liên kết với chủ sở hữu Locket.</div>
+      </details>
+      <details class="glass reveal" style="--i:2">
+        <summary>Vì sao phải chờ <span data-k="wait">5</span> giây?</summary>
+        <div class="ans">Đây chỉ là một bước chờ ngắn trước khi nút tải hiện ra. Trang không kiểm tra hay quét gì trên thiết bị của bạn.</div>
+      </details>
+      <details class="glass reveal" style="--i:3">
+        <summary>Link tải dẫn đến đâu?</summary>
+        <div class="ans">Link mở trong một tab mới và dẫn thẳng đến trang <span data-k="host">MediaFire</span> chứa file APK. Bạn có thể xem địa chỉ trên thanh trình duyệt trước khi tải.</div>
+      </details>
+      <details class="glass reveal" style="--i:4">
+        <summary>Có dùng được trên iPhone không?</summary>
+        <div class="ans">Không. File APK chỉ dành cho thiết bị Android.</div>
+      </details>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Trang chuyển hướng không chính thức. Locket là thương hiệu của chủ sở hữu tương ứng.</p>
+  <p>Trang này không lưu trữ file và không liên kết với Locket hay <span data-k="publisher">ElaMods</span>.</p>
+</footer>
+
+<div class="toast glass" id="toast" role="status" aria-live="polite">Đã sao chép tên file</div>
+
+<script>
+(function () {
+  var S = window.SITE;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var fine = window.matchMedia("(pointer: fine)").matches;
+  var $ = function (id) { return document.getElementById(id); };
+  var card = $("card"), nav = $("nav"), toast = $("toast");
+
+  /* ---------- Đổ dữ liệu từ cấu hình vào trang ---------- */
+  var DATA = { name: S.name, version: S.version, build: S.build, versionFull: S.version + " (" + S.build + ")",
+    platform: S.platform, format: S.format, host: S.host, publisher: S.publisher, fileName: S.fileName, wait: S.wait };
+  document.querySelectorAll("[data-k]").forEach(function (el) { el.textContent = DATA[el.dataset.k]; });
+  document.title = S.name + " – Trang chuyển hướng tải file";
+
+  /* ---------- Đếm ngược: 1 nút, 3 trạng thái ---------- */
+  var cta = $("cta"), label = $("ctaLabel"), bar = $("ctaBar"), hint = $("hint");
+  var state = "idle";
+
+  function setState(v) { state = v; cta.dataset.state = v; }
+
+  var ring = $("ctaRing"), RING = 94.25;
+
+  function ready() {
+    bar.style.width = "100%"; ring.style.strokeDashoffset = 0;
+    setTimeout(function () {                 /* nạp đầy rồi mới mở khoá */
+      cta.href = S.url; cta.target = "_blank"; cta.rel = "noopener noreferrer"; cta.removeAttribute("role");
+      setState("ready");
+      label.textContent = "Tải " + S.name;
+      hint.textContent = "Link mở trong tab mới và dẫn đến " + S.host + ".";
+    }, 280);
+  }
+
+  function start() {
+    setState("wait");
+    hint.textContent = "Vui lòng giữ trang này mở.";
+    label.textContent = "Đang mở khoá";
+    var num = $("ctaNum"), pips = $("ctaPips"), t0 = performance.now(), last = -1, n = Math.max(1, Math.round(S.wait));
+    pips.innerHTML = "";
+    for (var i = 0; i < n; i++) pips.appendChild(document.createElement("i"));
+    var cells = pips.children;
+    (function frame(now) {
+      var t = Math.min((now - t0) / 1000, S.wait), p = t / S.wait, left = Math.ceil(S.wait - t);
+      bar.style.width = (p * 100) + "%";
+      ring.style.strokeDashoffset = RING * (1 - p);
+      for (var k = 0; k < cells.length; k++) cells[k].style.setProperty("--p", Math.max(0, Math.min(1, p * cells.length - k)).toFixed(3));
+      if (left !== last) {
+        last = left; num.textContent = left;
+        num.classList.remove("roll"); void num.offsetWidth; num.classList.add("roll");
+      }
+      if (t < S.wait) requestAnimationFrame(frame); else ready();
+    })(t0);
+  }
+
+  cta.addEventListener("keydown", function (e) {
+    if (e.key === " " && state !== "ready") { e.preventDefault(); cta.click(); }
+  });
+  cta.addEventListener("click", function (e) {
+    if (state === "ready") return;
+    e.preventDefault();
+    if (state === "idle") start();
+  });
+
+  /* ---------- Gợn sóng khi bấm nút ---------- */
+  document.querySelectorAll(".btn").forEach(function (btn) {
+    btn.addEventListener("pointerdown", function (e) {
+      if (reduce) return;
+      var r = btn.getBoundingClientRect();
+      var size = Math.max(r.width, r.height) * 2;
+      var el = document.createElement("span");
+      el.className = "ripple";
+      el.style.width = el.style.height = size + "px";
+      el.style.left = (e.clientX - r.left - size / 2) + "px";
+      el.style.top = (e.clientY - r.top - size / 2) + "px";
+      btn.appendChild(el);
+      el.addEventListener("animationend", function () { el.remove(); });
+    });
+  });
+
+  /* ---------- Điểm sáng trên mọi mặt kính ---------- */
+  document.querySelectorAll(".glass").forEach(function (el) {
+    el.addEventListener("pointermove", function (e) {
+      var r = el.getBoundingClientRect();
+      el.style.setProperty("--gx", (e.clientX - r.left) + "px");
+      el.style.setProperty("--gy", (e.clientY - r.top) + "px");
+    }, { passive: true });
+  });
+
+  /* ---------- Nghiêng 3D thẻ chính + parallax nền ---------- */
+  var root = document.documentElement, raf = 0, mx = 0, my = 0;
+  if (!reduce && fine) {
+    window.addEventListener("pointermove", function (e) {
+      mx = e.clientX; my = e.clientY;
+      if (raf) return;
+      raf = requestAnimationFrame(function () {
+        root.style.setProperty("--mx", mx + "px");
+        root.style.setProperty("--my", my + "px");
+        root.style.setProperty("--px", (mx / window.innerWidth - 0.5).toFixed(3));
+        root.style.setProperty("--py", (my / window.innerHeight - 0.5).toFixed(3));
+        raf = 0;
+      });
+    }, { passive: true });
+
+    card.addEventListener("pointermove", function (e) {
+      var r = card.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - 0.5;
+      var y = (e.clientY - r.top) / r.height - 0.5;
+      card.classList.add("tracking");
+      card.style.setProperty("--ry", (x * 7).toFixed(2) + "deg");
+      card.style.setProperty("--rx", (-y * 7).toFixed(2) + "deg");
+    });
+    card.addEventListener("pointerleave", function () {
+      card.classList.remove("tracking");
+      card.style.setProperty("--ry", "0deg");
+      card.style.setProperty("--rx", "0deg");
+    });
+  }
+
+  /* ---------- Thanh nav đậm dần khi cuộn ---------- */
+  function onScroll() { nav.classList.toggle("scrolled", window.scrollY > 24); }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* ---------- Hiện dần khi cuộn ---------- */
+  var items = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target);
+          (function (t) { setTimeout(function () { t.classList.add("done"); }, 1600); })(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    items.forEach(function (el) { io.observe(el); });
+  } else {
+    items.forEach(function (el) { el.classList.add("in"); });
+  }
+
+  /* ---------- Sao chép tên file ---------- */
+  var toastTimer = 0;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 2000);
+  }
+  $("copyBtn").addEventListener("click", function () {
+    var text = S.fileName;
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); showToast("Đã sao chép tên file"); }
+      catch (err) { showToast("Không sao chép được"); }
+      ta.remove();
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { showToast("Đã sao chép tên file"); }, fallback);
+    } else { fallback(); }
+  });
+})();
+</script>
+</body>
+</html>
